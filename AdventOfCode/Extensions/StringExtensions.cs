@@ -1,4 +1,6 @@
-﻿
+﻿using System;
+using System.Linq;
+
 namespace AdventOfCode.Extensions
 {
     static class StringExtensions
@@ -13,6 +15,37 @@ namespace AdventOfCode.Extensions
             }
 
             return total;
+        }
+
+        public static string RemoveWhitespace(this string str)
+        {
+            return new string(str.ToCharArray()
+                .Where(c => !Char.IsWhiteSpace(c))
+                .ToArray());
+        }
+
+        public static string[] Split(this string str, string needle)
+        {
+            return str.Split(new string[] { needle }, StringSplitOptions.None);
+        }
+
+        public static string Replace(this string str, string needle, int idx, int length)
+        {
+            string newStr = "";
+
+            for (int i = 0; i < idx; i++)
+            {
+                newStr += str[i];
+            }
+
+            newStr += needle;
+
+            for (int i = idx + length; i < str.Length; i++)
+            {
+                newStr += str[i];
+            }
+
+            return newStr;
         }
     }
 }
