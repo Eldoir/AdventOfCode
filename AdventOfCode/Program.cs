@@ -4,9 +4,9 @@ namespace AdventOfCode
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            var prob = new Problem_2015_1();
+            var prob = new Problem_2015_2();
             prob.Init();
             prob.Run();
         }
