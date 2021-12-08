@@ -6,7 +6,9 @@ namespace AdventOfCode
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var prob = new Problem_2015_1();
+            prob.Init();
+            prob.Run();
         }
     }
 }

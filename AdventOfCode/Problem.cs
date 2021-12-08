@@ -12,7 +12,7 @@ namespace AdventOfCode
 
         public void Init()
         {
-            string filepath = $"input/{Year}/{Number}.txt";
+            string filepath = $"../../../input/{Year}/{Number}.txt";
             Text = File.ReadAllText(filepath);
             Lines = File.ReadAllLines(filepath);
 
@@ -21,7 +21,6 @@ namespace AdventOfCode
 
         protected virtual void InitInternal() { }
 
-        public abstract void ExecuteFirstStar();
-        public abstract void ExecuteSecondStar();
+        public abstract void Run();
     }
 }
