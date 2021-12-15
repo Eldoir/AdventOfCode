@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AdventOfCode.Core;
 
 namespace AdventOfCode
 {
@@ -35,7 +36,7 @@ namespace AdventOfCode
                 rate += criteria(i, Lines, '0');
             }
 
-            return BinaryToDecimal(rate);
+            return Mathf.BinaryToInt(rate);
         }
 
         private int GetRatingWithBitCriteria(BitCriteria criteria, char defaultValueIfEqual)
@@ -50,7 +51,7 @@ namespace AdventOfCode
                 i++;
             }
 
-            return BinaryToDecimal(lines[0]);
+            return Mathf.BinaryToInt(lines[0]);
         }
 
         private char MostCommonValue(int column, string[] lines, char defaultValueIfEqual)
@@ -86,22 +87,6 @@ namespace AdventOfCode
             }
 
             return count;
-        }
-
-        private int BinaryToDecimal(string binary)
-        {
-            int sum = 0;
-            int power2 = 0;
-
-            for (int i = binary.Length - 1; i >= 0; i--)
-            {
-                if (binary[i] == '1')
-                    sum += (int)Math.Pow(2, power2);
-
-                power2++;
-            }
-
-            return sum;
         }
 
         #endregion
