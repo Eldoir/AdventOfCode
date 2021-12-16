@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Extensions
 {
@@ -22,6 +24,24 @@ namespace AdventOfCode.Extensions
             return new string(str.ToCharArray()
                 .Where(c => !Char.IsWhiteSpace(c))
                 .ToArray());
+        }
+
+        /// <summary>
+        /// Numbers in <paramref name="str"/> must be separated by one or more whitespaces.
+        /// </summary>
+        public static int[] ToIntArray(this string str)
+        {
+            var regex = new Regex(@"\s*(\d+)");
+            var matches = regex.Matches(str);
+
+            var result = new List<int>();
+
+            foreach (Match match in matches)
+            {
+                result.Add(int.Parse(match.Groups[1].ToString()));
+            }
+
+            return result.ToArray();
         }
 
         public static string[] Split(this string str, string needle)
