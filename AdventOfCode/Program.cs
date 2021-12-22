@@ -5,7 +5,7 @@ namespace AdventOfCode
     {
         static void Main()
         {
-            var prob = new Problem_2021_4();
+            var prob = new Problem_2021_5();
             prob.Init();
             prob.Run();
         }

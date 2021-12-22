@@ -2,7 +2,7 @@
 
 namespace AdventOfCode.Core
 {
-    class Vector2Int
+    class Vector2Int : IEquatable<Vector2Int>
     {
         public int x;
         public int y;
@@ -83,6 +83,20 @@ namespace AdventOfCode.Core
         public override string ToString()
         {
             return $"({x},{y})";
+        }
+
+        #region IEquatable
+
+        public bool Equals(Vector2Int other)
+        {
+            return x == other.x && y == other.y;
+        }
+
+        #endregion
+
+        public override int GetHashCode()
+        {
+            return (x * 397) ^ y;
         }
     }
 }
