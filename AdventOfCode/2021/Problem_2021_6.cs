@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace AdventOfCode
@@ -8,46 +7,69 @@ namespace AdventOfCode
     {
         public override int Number => 6;
 
-        private List<int> lanterns;
+        private const int MaxLanternTimer = 8;
+
+        private long[] lanterns;
 
         protected override void InitInternal()
         {
-            lanterns = Lines[0].Split(',').Select(n => int.Parse(n)).ToList();
+            lanterns = new long[MaxLanternTimer + 1];
+            var nbs = Lines[0].Split(',').Select(n => int.Parse(n));
+
+            foreach (int nb in nbs)
+            {
+                AddLantern(nb);
+            }
 
             base.InitInternal();
         }
 
         public override void Run()
         {
-            for (int i = 0; i < 80; i++)
-            {
-                SimulateOneDay();
-            }
-
-            Console.WriteLine($"First star: {lanterns.Count}");
+            Console.WriteLine($"First star: {CountLanternsAfterDays(80)}");
+            Console.WriteLine($"Second star: {CountLanternsAfterDays(176)}"); // simulate another 176 days, so 256 in total
         }
 
         #region Methods
 
+        private void SpawnLanterns(long count)
+        {
+            AddLanterns(MaxLanternTimer, count);
+        }
+
+        private void AddLantern(int nb)
+        {
+            AddLanterns(nb, 1);
+        }
+
+        private void AddLanterns(int nb, long count)
+        {
+            lanterns[nb] += count;
+        }
+
+        private long CountLanternsAfterDays(int nb)
+        {
+            for (int i = 0; i < nb; i++)
+            {
+                SimulateOneDay();
+            }
+
+            return lanterns.Sum();
+        }
+
         private void SimulateOneDay()
         {
-            int nbLanternsToSpawn = 0;
+            long nbLanternsToSpawn = lanterns[0];
 
-            for (int i = 0; i < lanterns.Count; i++)
+            for (int i = 0; i < lanterns.Length - 1; i++)
             {
-                lanterns[i]--;
-
-                if (lanterns[i] < 0)
-                {
-                    lanterns[i] = 6;
-                    nbLanternsToSpawn++;
-                }
+                lanterns[i] = lanterns[i + 1];
             }
 
-            for (int i = 0; i < nbLanternsToSpawn; i++)
-            {
-                lanterns.Add(8);
-            }
+            lanterns[^1] = 0;
+
+            AddLanterns(6, nbLanternsToSpawn);
+            SpawnLanterns(nbLanternsToSpawn);
         }
 
         #endregion
