@@ -67,5 +67,32 @@ namespace AdventOfCode.Extensions
 
             return newStr;
         }
+
+        public static string Minus(this string str, string other)
+        {
+            string result = "";
+
+            for (int i = 0; i < str.Length; i++)
+            {
+                int idx = other.IndexOf(str[i]);
+
+                if (idx == -1)
+                    result += str[i];
+                else
+                    other = other.Remove(idx, 1);
+            }
+
+            return result;
+        }
+
+        public static bool ContainsAllLettersOf(this string str, string other)
+        {
+            return other.Minus(str).Length == 0;
+        }
+
+        public static bool IsEqualToShuffled(this string str, string other)
+        {
+            return str.ContainsAllLettersOf(other) && other.ContainsAllLettersOf(str);
+        }
     }
 }
