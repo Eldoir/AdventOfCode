@@ -37,7 +37,7 @@ namespace AdventOfCode
         public override void Run()
         {
             Console.WriteLine($"First star: {Lines.Sum(l => firstStarTable[l])}");
-            Console.WriteLine($"First star: {Lines.Sum(l => secondStarTable[l])}");
+            Console.WriteLine($"Second star: {Lines.Sum(l => secondStarTable[l])}");
         }
     }
 }
