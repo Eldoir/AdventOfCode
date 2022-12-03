@@ -13,16 +13,16 @@ namespace AdventOfCode
             var elves = new List<Elve>();
             var elve = new Elve();
 
-            for (int i = 0; i < Lines.Length; i++)
+            foreach (string line in Lines)
             {
-                if (string.IsNullOrEmpty(Lines[i]))
+                if (string.IsNullOrEmpty(line))
                 {
                     elves.Add(elve);
                     elve = new Elve();
                 }
                 else
                 {
-                    elve.AddSnack(int.Parse(Lines[i]));
+                    elve.AddSnack(int.Parse(line));
                 }
             }
 
@@ -36,17 +36,8 @@ namespace AdventOfCode
 
         class Elve
         {
-            public int Id { get; }
-            public List<int> Snacks { get; }
+            public List<int> Snacks { get; } = new List<int>();
             public int SnacksTotal => Snacks.Sum();
-
-            private static int NbElves = 0;
-
-            public Elve()
-            {
-                Id = NbElves++; ;
-                Snacks = new List<int>();
-            }
 
             public void AddSnack(int snack)
             {
