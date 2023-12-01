@@ -7,6 +7,17 @@ namespace AdventOfCode.Extensions
 {
     static class StringExtensions
     {
+        public static int[] IndexesOf(this string str, string needle)
+        {
+            List<int> indexes = new();
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (str[i..].StartsWith(needle))
+                    indexes.Add(i);
+            }
+            return indexes.ToArray();
+        }
+
         public static int NbOccurrences(this string str, char c)
         {
             int total = 0;
