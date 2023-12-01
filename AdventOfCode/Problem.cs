@@ -7,48 +7,38 @@ namespace AdventOfCode
         public abstract int Year { get; }
         public abstract int Number { get; }
 
-        public string Text => useTestInput ? textTest : text;
-        public string[] Lines => useTestInput ? linesTest : lines;
-
-        private string text;
-        private string[] lines;
-
-        private string textTest;
-        private string[] linesTest;
+        public string Text { get; private set; }
+        public string[] Lines { get; private set; }
 
         private bool useTestInput = false;
+        private int testFileNumber;
 
         public void Init()
         {
-            (text, lines) = InitTextAndLines(isTestInput: false);
-
-            if (TestFileExists())
-            {
-                (textTest, linesTest) = InitTextAndLines(isTestInput: true);
-            }
-
+            InitTextAndLines();
             InitInternal();
         }
 
-        private (string, string[]) InitTextAndLines(bool isTestInput)
+        private void InitTextAndLines()
         {
-            string inputFilePath = GetInputFilePath(isTestInput);
-            return (File.ReadAllText(inputFilePath), File.ReadAllLines(inputFilePath));
+            string inputFilePath = GetInputFilePath();
+            Text = File.ReadAllText(inputFilePath);
+            Lines = Text.Split('\n');
         }
 
-        private bool TestFileExists()
+        private string GetInputFilePath()
         {
-            return File.Exists(GetInputFilePath(isTestInput: true));
+            return $"../../../input/{Year}/{Number}" +
+                   (useTestInput ? "_test" : "") +
+                   (useTestInput && testFileNumber > 1 ? $"_{testFileNumber}" : "") +
+                   ".txt";
         }
 
-        private string GetInputFilePath(bool isTestInput)
-        {
-            return $"../../../input/{Year}/{Number}{(isTestInput ? "_test" : "")}.txt";
-        }
-
-        protected void UseTestInput()
+        protected void UseTestInput(int testFileNumber = 1)
         {
             useTestInput = true;
+            this.testFileNumber = testFileNumber;
+            InitTextAndLines();
         }
 
         protected virtual void InitInternal() { }
