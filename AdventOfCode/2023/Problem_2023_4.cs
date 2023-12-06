@@ -12,8 +12,6 @@ namespace AdventOfCode
 
         public override void Run()
         {
-            //UseTestInput();
-
             Card[] cards = new Card[Lines.Length];
 
             for (int i = 0; i < Lines.Length; i++)
@@ -27,17 +25,23 @@ namespace AdventOfCode
             }
 
             int firstStar = 0;
+            (int N, int Matches, int Copies)[] secondStar = cards.Select(c => (c.Number, 0, 1)).ToArray();
             foreach (Card card in cards)
             {
-                int occ = card.WinningNumbers.Intersect(card.NumbersYouHave).Count();
-                if (occ > 0)
+                int matches = card.WinningNumbers.Intersect(card.NumbersYouHave).Count();
+                if (matches > 0)
                 {
-                    firstStar += (int)Math.Pow(2, occ - 1);
+                    firstStar += (int)Math.Pow(2, matches - 1);
+
+                    for (int i = card.Number; i < card.Number + matches; i++)
+                    {
+                        secondStar[i].Copies += secondStar[card.Number - 1].Copies;
+                    }
                 }
             }
 
             Console.WriteLine($"First star: {firstStar}");
-            Console.WriteLine($"Second star: {0}");
+            Console.WriteLine($"Second star: {secondStar.Sum(s => s.Copies)}");
         }
 
         private static int[] SafeParse(string s)
