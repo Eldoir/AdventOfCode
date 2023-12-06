@@ -1,6 +1,7 @@
 ﻿using AdventOfCode.Core;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AdventOfCode
 {
@@ -8,10 +9,33 @@ namespace AdventOfCode
     {
         public override int Number => 3;
 
+        class Symbol
+        {
+            public char C { get; }
+            private List<int> AdjacentNumbers = new();
+
+            public Symbol(char c)
+            {
+                C = c;
+            }
+
+            public void AddAdjacentNumber(int n)
+            {
+                AdjacentNumbers.Add(n);
+            }
+
+            public int GetGearRatio()
+            {
+                if (AdjacentNumbers.Count != 2)
+                    return 0;
+
+                return AdjacentNumbers.Aggregate(1, (total, next) => total * next);
+            }
+        }
+
         public override void Run()
         {
-            //UseTestInput();
-            Dictionary<Vector2Int, char> symbols = new();
+            Dictionary<Vector2Int, Symbol> symbols = new();
             Dictionary<Vector2Int, int> numbers = new();
 
             for (int i = 0; i < Lines.Length; i++)
@@ -33,7 +57,7 @@ namespace AdventOfCode
                     else
                     {
                         if (c != '.')
-                            symbols.Add(new Vector2Int(j, i), c);
+                            symbols.Add(new Vector2Int(j, i), new Symbol(c));
                         
                         if (numIdx != -1) // end of number
                             numbers.Add(new Vector2Int(numIdx, i), int.Parse(line.Substring(numIdx, j - numIdx)));
@@ -46,7 +70,7 @@ namespace AdventOfCode
                     numbers.Add(new Vector2Int(numIdx, i), int.Parse(line.Substring(numIdx)));
             }
 
-            int sum = 0;
+            int firstStar = 0;
             foreach (var kvp in numbers)
             {
                 int length = (int)Math.Log10(kvp.Value) + 1;
@@ -56,14 +80,18 @@ namespace AdventOfCode
                 {
                     if (s.Key.x >= minX && s.Key.x <= maxX && Math.Abs(kvp.Key.y - s.Key.y) <= 1)
                     {
-                        sum += kvp.Value;
+                        firstStar += kvp.Value;
+                        if (s.Value.C == '*')
+                        {
+                            s.Value.AddAdjacentNumber(kvp.Value);
+                        }
                         break;
                     }
                 }
             }
 
-            Console.WriteLine($"First star: {sum}");
-            Console.WriteLine($"Second star: {0}");
+            Console.WriteLine($"First star: {firstStar}");
+            Console.WriteLine($"Second star: {symbols.Values.Sum(s => s.GetGearRatio())}");
         }
     }
 }
