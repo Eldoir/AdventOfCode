@@ -46,7 +46,7 @@ namespace AdventOfCode
 
         private static int[] SafeParse(string s)
         {
-            string[] numbers = s.Trim().Split(' ');
+            string[] numbers = s.Split(' ');
             List<int> result = new();
             foreach (string n in numbers)
             {

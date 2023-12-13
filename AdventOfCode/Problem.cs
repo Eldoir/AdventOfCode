@@ -23,7 +23,7 @@ namespace AdventOfCode
         {
             string inputFilePath = GetInputFilePath();
             Text = File.ReadAllText(inputFilePath);
-            Lines = Text.Split('\n');
+            Lines = File.ReadAllLines(inputFilePath);
         }
 
         private string GetInputFilePath()
