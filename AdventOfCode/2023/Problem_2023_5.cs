@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace AdventOfCode
@@ -57,7 +58,6 @@ namespace AdventOfCode
         {
             UseTestInput();
             long[] seeds = Lines[0].Split(':')[1].Trim().Split(' ').Select(long.Parse).ToArray();
-            Console.WriteLine(string.Join(",", seeds));
             List<Map> maps = new();
             Map currentMap = null;
 
@@ -81,7 +81,36 @@ namespace AdventOfCode
 
             maps.Add(currentMap);
 
-            Console.WriteLine(maps.Count);
+            long minLocation = long.MaxValue;
+
+            foreach (long seed in seeds)
+            {
+                long value = seed;
+                foreach (Map map in maps)
+                {
+                    value = map.Apply(value);
+                }
+                minLocation = Math.Min(value, minLocation);
+            }
+
+            Console.WriteLine($"First star: {minLocation}");
+
+            minLocation = long.MaxValue;
+
+            for (int i = 0; i < seeds.Length; i += 2)
+            {
+                for (int j = 0; j < seeds[i + 1]; j++)
+                {
+                    long value = seeds[i] + j;
+                    foreach (Map map in maps)
+                    {
+                        value = map.Apply(value);
+                    }
+                    minLocation = Math.Min(value, minLocation);
+                }
+            }
+
+            Console.WriteLine($"Second star: {minLocation}");
         }
     }
 }
