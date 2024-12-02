@@ -5,9 +5,14 @@ namespace AdventOfCode.Extensions
 {
     static class IEnumerableExtensions
     {
-        public static IEnumerable<TSource> Subset<TSource>(this IEnumerable<TSource> source, int start, int count)
+        public static IEnumerable<T> Subset<T>(this IEnumerable<T> source, int start, int count)
         {
             return source.Skip(start).Take(count);
+        }
+
+        public static T[] Sort<T>(this IEnumerable<T> source)
+        {
+            return source.OrderBy(a => a).ToArray();
         }
     }
 }
