@@ -1,0 +1,99 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace AdventOfCode
+{
+    class Problem_2024_5 : Problem_2024
+    {
+        public override int Number => 5;
+
+        Dictionary<int, Order> orders = new();
+
+        public override void Run()
+        {
+            //UseTestInput();
+            int secondPartIndex = -1;
+
+            for (int i = 0; i < Lines.Length; i++)
+            {
+                if (string.IsNullOrEmpty(Lines[i]))
+                {
+                    secondPartIndex = i + 1;
+                    break;
+                }
+
+                int[] ints = Lines[i].Split('|').Select(int.Parse).ToArray();
+                int n1 = ints[0];
+                int n2 = ints[1];
+
+                if (!orders.TryGetValue(n1, out Order order1))
+                    order1 = new Order();
+                if (!orders.TryGetValue(n2, out Order order2))
+                    order2 = new Order();
+                order1.SetBefore(n2);
+                order2.SetAfter(n1);
+                orders[n1] = order1;
+                orders[n2] = order2;
+            }
+
+            int firstStar = 0;
+            for (int i = secondPartIndex; i < Lines.Length; i++)
+            {
+                int[] update = Lines[i].Split(',').Select(int.Parse).ToArray();
+                if (IsCorrect(update))
+                {
+                    firstStar += update[update.Length / 2];
+                }
+            }
+
+            Console.WriteLine($"First star: {firstStar}");
+        }
+
+        bool IsCorrect(int[] update)
+        {
+            for (int i = 0; i < update.Length; i++)
+            {
+                // Check before
+                for (int j = 0; j < i; j++)
+                {
+                    if (orders[update[j]].IsAfter(update[i]))
+                        return false;
+                }
+                // Check after
+                for (int j = i + 1; j < update.Length; j++)
+                {
+                    if (orders[update[j]].IsBefore(update[i]))
+                        return false;
+                }
+            }
+            return true;
+        }
+
+        class Order
+        {
+            public void SetAfter(int n)
+            {
+                _before.Add(n);
+            }
+
+            public void SetBefore(int n)
+            {
+                _after.Add(n);
+            }
+
+            public bool IsBefore(int n)
+            {
+                return _after.Contains(n);
+            }
+
+            public bool IsAfter(int n)
+            {
+                return _before.Contains(n);
+            }
+
+            private readonly List<int> _before = new();
+            private readonly List<int> _after = new();
+        }
+    }
+}
