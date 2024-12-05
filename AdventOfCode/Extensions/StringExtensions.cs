@@ -30,6 +30,26 @@ namespace AdventOfCode.Extensions
             return total;
         }
 
+        public static int NbOccurrences(this string str, string needle)
+        {
+            int total = 0;
+
+            for (int i = 0; i < str.Length - needle.Length + 1; i++)
+            {
+                if (str.Substring(i, needle.Length) == needle)
+                    total++;
+            }
+
+            return total;
+        }
+
+        public static string Reverse(this string str)
+        {
+            char[] arr = str.ToCharArray();
+            Array.Reverse(arr);
+            return new string(arr);
+        }
+
         public static string RemoveWhitespace(this string str)
         {
             return new string(str.ToCharArray()
