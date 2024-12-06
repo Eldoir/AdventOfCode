@@ -1,4 +1,5 @@
-﻿using AdventOfCode.Core;
+﻿#nullable enable
+using AdventOfCode.Core;
 using System;
 using System.Collections.Generic;
 
@@ -8,14 +9,17 @@ namespace AdventOfCode
     {
         public override int Number => 6;
 
+        int height, width;
+        char[,] map;
+
         public override void Run()
         {
-            //UseTestInput();
-            int height = Lines.Length;
-            int width = Lines[0].Length;
-            char[,] map = new char[height, width];
-            Vector2Int guardPos = new();
-            Vector2Int guardDir = new();
+            UseTestInput();
+            height = Lines.Length;
+            width = Lines[0].Length;
+            map = new char[height, width];
+            Vector2Int pos = new();
+            Vector2Int dir = new();
             HashSet<Vector2Int> visited = new();
             for (int i = 0; i < height; i++)
             {
@@ -24,9 +28,9 @@ namespace AdventOfCode
                     map[i, j] = Lines[i][j];
                     if (map[i, j] != '.' && map[i, j] != '#')
                     {
-                        guardPos = new(j, i);
-                        visited.Add(guardPos);
-                        guardDir = map[i, j] switch
+                        pos = new(j, i);
+                        visited.Add(pos);
+                        dir = map[i, j] switch
                         {
                             '^' => new Vector2Int(0, -1),
                             'v' => new Vector2Int(0, 1),
@@ -39,18 +43,46 @@ namespace AdventOfCode
             }
             while (true)
             {
-                Vector2Int nextPos = guardPos + guardDir;
-                if (nextPos.x < 0 || nextPos.x >= width || nextPos.y < 0 || nextPos.y >= height)
+                Vector2Int? newDir = GetNewDir(pos, dir);
+                if (newDir is null)
                     break;
 
-                if (map[nextPos.y, nextPos.x] == '#')
-                {
-                    guardDir.Rotate(90);
-                }
-                guardPos += guardDir;
-                visited.Add(guardPos);
+                pos += newDir;
+                dir = newDir;
+                visited.Add(pos);
             }
             Console.WriteLine($"First star: {visited.Count}");
+
+            foreach (Vector2Int visitedPos in visited)
+            {
+                map[visitedPos.y, visitedPos.x] = '#';
+
+                // TODO
+
+                map[visitedPos.y, visitedPos.x] = '.';
+            }
+        }
+
+        bool IsLoop(Vector2Int pos, Vector2Int dir)
+        {
+            return false;
+        }
+
+        /// <returns>
+        /// null if out of bounds
+        /// </returns>
+        Vector2Int? GetNewDir(Vector2Int pos, Vector2Int dir)
+        {
+            Vector2Int nextDir = new(dir);
+            Vector2Int nextPos = pos + dir;
+            if (nextPos.x < 0 || nextPos.x >= width || nextPos.y < 0 || nextPos.y >= height)
+                return null;
+
+            if (map[nextPos.y, nextPos.x] == '#')
+            {
+                nextDir.Rotate(90);
+            }
+            return nextDir;
         }
     }
 }

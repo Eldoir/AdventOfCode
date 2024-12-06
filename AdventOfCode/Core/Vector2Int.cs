@@ -8,6 +8,7 @@ namespace AdventOfCode.Core
         public int y;
 
         public Vector2Int() : this(0, 0) { }
+        public Vector2Int(Vector2Int other) : this(other.x, other.y) { }
 
         public Vector2Int(int x, int y)
         {
