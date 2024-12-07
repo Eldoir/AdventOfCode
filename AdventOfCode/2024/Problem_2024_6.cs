@@ -50,6 +50,9 @@ namespace AdventOfCode
 
             foreach (Vector2Int visitedPos in visited)
             {
+                if (visitedPos == startPos)
+                    continue; // we don't want to obstruct guard's starting position
+
                 HashSet<(Vector2Int Pos, Vector2Int Dir)> visitedSecond = new()
                 {
                     (startPos, startDir)
