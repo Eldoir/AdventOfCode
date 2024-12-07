@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AdventOfCode.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,6 +8,13 @@ namespace AdventOfCode
     class Problem_2024_7 : Problem_2024
     {
         public override int Number => 7;
+
+        enum Operation
+        {
+            Add = 0,
+            Multiply = 1,
+            Concatenate = 2
+        }
 
         public override void Run()
         {
@@ -27,16 +35,16 @@ namespace AdventOfCode
         {
             int boolArrayLength = numbers.Length - 1;
             int n = (int)Math.Pow(2, boolArrayLength);
-            for (int i = 0; i < n; i++)
+            List<int[]> combinations = Combination.Generate(numbers.Length - 1, 2);
+            foreach (int[] operations in combinations)
             {
-                bool[] operations = IntToBoolArray(i, boolArrayLength);
                 long currentTotal = numbers[0];
 
                 for (int j = 0; j < operations.Length; j++)
                 {
-                    if (operations[j]) // multiplication
+                    if (operations[j] == (int)Operation.Multiply)
                         currentTotal *= numbers[j + 1];
-                    else
+                    else if (operations[j] == (int)Operation.Add)
                         currentTotal += numbers[j + 1];
 
                     if (currentTotal > total)
@@ -47,56 +55,6 @@ namespace AdventOfCode
                     return true;
             }
             return false;
-        }
-
-        // Not used; maybe in part2?
-        static long ComputeWithPrecedence(long[] numbers, bool[] operations)
-        {
-            if (numbers.Length - 1 != operations.Length)
-                throw new ArgumentException("The operations array must have one less element than the numbers array.");
-
-            long[] numbersCopy = (long[])numbers.Clone();
-
-            // Process multiplication first
-            for (int i = 0; i < operations.Length; i++)
-            {
-                if (operations[i]) // true = multiplication
-                {
-                    numbersCopy[i + 1] = numbersCopy[i] * numbersCopy[i + 1]; // Merge multiplication result
-                    numbersCopy[i] = 0; // Nullify the previous number (as addition won't affect result)
-                }
-            }
-
-            // Process addition
-            long result = 0;
-            for (int i = 0; i < numbersCopy.Length; i++)
-            {
-                result += numbersCopy[i];
-            }
-
-            return result;
-        }
-
-        static bool[] IntToBoolArray(int number, int expectedArrayLength)
-        {
-            List<bool> bits = new();
-
-            while (number > 0)
-            {
-                bits.Add((number % 2) == 1);
-                number /= 2;
-            }
-
-            bits.Reverse();
-
-            int pad = expectedArrayLength - bits.Count;
-
-            for (int i = 0; i < pad; i++)
-            {
-                bits.Insert(0, false);
-            }
-
-            return bits.ToArray();
         }
     }
 }
