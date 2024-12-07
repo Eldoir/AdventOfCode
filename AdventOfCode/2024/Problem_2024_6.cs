@@ -2,7 +2,6 @@
 using AdventOfCode.Core;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 
 namespace AdventOfCode
 {
@@ -15,7 +14,7 @@ namespace AdventOfCode
 
         public override void Run()
         {
-            UseTestInput();
+            //UseTestInput();
             height = Lines.Length;
             width = Lines[0].Length;
             map = new char[height, width];
@@ -43,26 +42,37 @@ namespace AdventOfCode
                 }
             }
 
-            RunGuard(startPos, startDir, (pos, dir) => visited.Add(pos));
+            RunGuard(startPos, startDir, (pos, dir) => { visited.Add(pos); return true; });
 
             Console.WriteLine($"First star: {visited.Count}");
 
+            int nbObstructionsCausingLoop = 0;
+
             foreach (Vector2Int visitedPos in visited)
             {
+                HashSet<(Vector2Int Pos, Vector2Int Dir)> visitedSecond = new()
+                {
+                    (startPos, startDir)
+                };
                 map[visitedPos.y, visitedPos.x] = '#';
 
-                // TODO
+                RunGuard(startPos, startDir, (pos, dir) => {
+                    if (!visitedSecond.Add((pos, dir)))
+                    {
+                        nbObstructionsCausingLoop++;
+                        return false;
+                    }
+                    return true;
+                });
 
                 map[visitedPos.y, visitedPos.x] = '.';
             }
+
+            Console.WriteLine($"Second star: {nbObstructionsCausingLoop}");
         }
 
-        bool IsLoop(Vector2Int pos, Vector2Int dir)
-        {
-            return false;
-        }
-
-        void RunGuard(Vector2Int startPos, Vector2Int startDir, Action<Vector2Int, Vector2Int> onStep = null)
+        /// <param name="onStep">If returns false, tells this method to return immediately.</param>
+        void RunGuard(Vector2Int startPos, Vector2Int startDir, Func<Vector2Int, Vector2Int, bool> onStep = null)
         {
             Vector2Int pos = new(startPos);
             Vector2Int dir = new(startDir);
@@ -74,7 +84,8 @@ namespace AdventOfCode
 
                 pos += newDir;
                 dir = newDir;
-                onStep?.Invoke(pos, dir);
+                if (onStep is not null && !onStep.Invoke(pos, dir))
+                    return;
             }
         }
 
