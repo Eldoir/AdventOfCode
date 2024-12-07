@@ -12,7 +12,7 @@ namespace AdventOfCode
         delegate long Compute(long a, long b);
         static long Add(long a, long b) => a + b;
         static long Multiply(long a, long b) => a * b;
-        static long Concatenate(long a, long b) => long.Parse(a.ToString() + b.ToString());
+        static long Concatenate(long a, long b) => a * ((long)Math.Pow(10, (long)Math.Log10(b) + 1)) + b;
 
         public override void Run()
         {
