@@ -9,43 +9,42 @@ namespace AdventOfCode
     {
         public override int Number => 7;
 
-        enum Operation
-        {
-            Add = 0,
-            Multiply = 1,
-            Concatenate = 2
-        }
+        delegate long Compute(long a, long b);
+        static long Add(long a, long b) => a + b;
+        static long Multiply(long a, long b) => a * b;
+        static long Concatenate(long a, long b) => long.Parse(a.ToString() + b.ToString());
 
         public override void Run()
         {
             //UseTestInput();
             long firstStar = 0;
+            long secondStar = 0;
+
             foreach (string line in Lines)
             {
                 string[] strings = line.Split(": ");
                 long total = long.Parse(strings[0]);
                 int[] numbers = strings[1].Split(' ').Select(int.Parse).ToArray();
-                if (IsWorkingCombi(total, numbers))
+                if (IsWorkingCombi(total, numbers, Add, Multiply))
                     firstStar += total;
+                if (IsWorkingCombi(total, numbers, Add, Multiply, Concatenate))
+                    secondStar += total;
             }
+
             Console.WriteLine($"First star: {firstStar}");
+            Console.WriteLine($"Second star: {secondStar}");
         }
 
-        static bool IsWorkingCombi(long total, int[] numbers)
+        static bool IsWorkingCombi(long total, int[] numbers, params Compute[] computers)
         {
-            int boolArrayLength = numbers.Length - 1;
-            int n = (int)Math.Pow(2, boolArrayLength);
-            List<int[]> combinations = Combination.Generate(numbers.Length - 1, 2);
+            List<int[]> combinations = Combination.Generate(numbers.Length - 1, computers.Length);
             foreach (int[] operations in combinations)
             {
                 long currentTotal = numbers[0];
 
                 for (int j = 0; j < operations.Length; j++)
                 {
-                    if (operations[j] == (int)Operation.Multiply)
-                        currentTotal *= numbers[j + 1];
-                    else if (operations[j] == (int)Operation.Add)
-                        currentTotal += numbers[j + 1];
+                    currentTotal = computers[operations[j]](currentTotal, numbers[j + 1]);
 
                     if (currentTotal > total)
                         break;
