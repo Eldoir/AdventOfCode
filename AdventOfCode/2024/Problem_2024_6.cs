@@ -42,7 +42,7 @@ namespace AdventOfCode
                 }
             }
 
-            RunGuard(startPos, startDir, (pos, dir) => { visited.Add(pos); return true; });
+            RunGuard(startPos, startDir, onStep: (pos, dir) => { visited.Add(pos); return true; });
 
             Console.WriteLine($"First star: {visited.Count}");
 
@@ -59,7 +59,7 @@ namespace AdventOfCode
                 };
                 map[visitedPos.y, visitedPos.x] = '#';
 
-                RunGuard(startPos, startDir, (pos, dir) => {
+                RunGuard(startPos, startDir, onObstacle: (pos, dir) => {
                     if (!visitedSecond.Add((pos, dir)))
                     {
                         nbObstructionsCausingLoop++;
@@ -75,7 +75,11 @@ namespace AdventOfCode
         }
 
         /// <param name="onStep">If returns false, tells this method to return immediately.</param>
-        void RunGuard(Vector2Int startPos, Vector2Int startDir, Func<Vector2Int, Vector2Int, bool> onStep = null)
+        void RunGuard(
+            Vector2Int startPos,
+            Vector2Int startDir,
+            Func<Vector2Int, Vector2Int, bool>? onStep = null,
+            Func<Vector2Int, Vector2Int, bool>? onObstacle = null)
         {
             Vector2Int pos = new(startPos);
             Vector2Int dir = new(startDir);
@@ -86,7 +90,12 @@ namespace AdventOfCode
                     break;
 
                 pos += newDir;
-                dir = newDir;
+                if (dir.x != newDir.x || dir.y != newDir.y)
+                {
+                    dir = newDir;
+                    if (onObstacle is not null && !onObstacle.Invoke(pos, dir))
+                        return;
+                }
                 if (onStep is not null && !onStep.Invoke(pos, dir))
                     return;
             }
