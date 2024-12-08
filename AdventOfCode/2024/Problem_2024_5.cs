@@ -38,6 +38,7 @@ namespace AdventOfCode
             }
 
             int firstStar = 0;
+            int secondStar = 0;
             for (int i = secondPartIndex; i < Lines.Length; i++)
             {
                 int[] update = Lines[i].Split(',').Select(int.Parse).ToArray();
@@ -45,9 +46,69 @@ namespace AdventOfCode
                 {
                     firstStar += update[update.Length / 2];
                 }
+                else
+                {
+                    int[] correctedOrder = TopologicalSort(update);
+                    secondStar += correctedOrder[correctedOrder.Length / 2];
+                }
             }
 
             Console.WriteLine($"First star: {firstStar}");
+            Console.WriteLine($"Second star: {secondStar}");
+        }
+
+        int[] TopologicalSort(int[] update)
+        {
+            Dictionary<int, int> inDegree = new();
+            Dictionary<int, List<int>> graph = new();
+
+            // Initialize graph and in-degree counts
+            foreach (int page in update)
+            {
+                inDegree[page] = 0;
+                graph[page] = new List<int>();
+            }
+
+            foreach (int page in update)
+            {
+                foreach (int afterPage in orders[page].After)
+                {
+                    if (update.Contains(afterPage))
+                    {
+                        graph[page].Add(afterPage);
+                        inDegree[afterPage]++;
+                    }
+                }
+            }
+
+            // Find all pages with no dependencies (in-degree 0)
+            Queue<int> queue = new();
+            foreach (KeyValuePair<int, int> kvp in inDegree)
+            {
+                if (kvp.Value == 0)
+                {
+                    queue.Enqueue(kvp.Key);
+                }
+            }
+
+            // Perform topological sort
+            List<int> sortedPages = new();
+            while (queue.Count > 0)
+            {
+                int current = queue.Dequeue();
+                sortedPages.Add(current);
+
+                foreach (int neighbor in graph[current])
+                {
+                    inDegree[neighbor]--;
+                    if (inDegree[neighbor] == 0)
+                    {
+                        queue.Enqueue(neighbor);
+                    }
+                }
+            }
+
+            return sortedPages.ToArray();
         }
 
         bool IsCorrect(int[] update)
@@ -91,6 +152,8 @@ namespace AdventOfCode
             {
                 return _before.Contains(n);
             }
+
+            public IReadOnlyList<int> After => _after;
 
             private readonly List<int> _before = new();
             private readonly List<int> _after = new();
