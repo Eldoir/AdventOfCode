@@ -48,8 +48,8 @@ namespace AdventOfCode
                 var fromPos = line.From;
                 var toPos = line.To;
 
-                int xInc = Utils.GetIncrement(fromPos.x, toPos.x);
-                int yInc = Utils.GetIncrement(fromPos.y, toPos.y);
+                int xInc = Core.Utils.GetIncrement(fromPos.x, toPos.x);
+                int yInc = Core.Utils.GetIncrement(fromPos.y, toPos.y);
 
                 if (xInc == 0) // vertical line
                 {
