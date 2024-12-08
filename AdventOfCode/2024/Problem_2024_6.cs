@@ -85,9 +85,12 @@ namespace AdventOfCode
             Vector2Int dir = new(startDir);
             while (true)
             {
-                Vector2Int? newDir = GetNewDir(pos, dir);
+                Vector2Int? newDir = GetNextDir(pos, dir);
                 if (newDir is null)
                     break;
+
+                while (map[pos.y + newDir.y, pos.x + newDir.x] == '#')
+                    newDir = GetNextDir(pos, newDir)!;
 
                 pos += newDir;
                 if (dir.x != newDir.x || dir.y != newDir.y)
@@ -104,7 +107,7 @@ namespace AdventOfCode
         /// <returns>
         /// null if out of bounds
         /// </returns>
-        Vector2Int? GetNewDir(Vector2Int pos, Vector2Int dir)
+        Vector2Int? GetNextDir(Vector2Int pos, Vector2Int dir)
         {
             Vector2Int nextDir = new(dir);
             Vector2Int nextPos = pos + dir;
