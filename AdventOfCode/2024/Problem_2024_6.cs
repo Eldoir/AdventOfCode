@@ -1,4 +1,5 @@
-﻿using AdventOfCode.Core;
+﻿#nullable enable
+using AdventOfCode.Core;
 using System;
 using System.Collections.Generic;
 
@@ -8,14 +9,17 @@ namespace AdventOfCode
     {
         public override int Number => 6;
 
+        int height, width;
+        char[,] map;
+
         public override void Run()
         {
             //UseTestInput();
-            int height = Lines.Length;
-            int width = Lines[0].Length;
-            char[,] map = new char[height, width];
-            Vector2Int guardPos = new();
-            Vector2Int guardDir = new();
+            height = Lines.Length;
+            width = Lines[0].Length;
+            map = new char[height, width];
+            Vector2Int startPos = new();
+            Vector2Int startDir = new();
             HashSet<Vector2Int> visited = new();
             for (int i = 0; i < height; i++)
             {
@@ -24,9 +28,9 @@ namespace AdventOfCode
                     map[i, j] = Lines[i][j];
                     if (map[i, j] != '.' && map[i, j] != '#')
                     {
-                        guardPos = new(j, i);
-                        visited.Add(guardPos);
-                        guardDir = map[i, j] switch
+                        startPos = new(j, i);
+                        visited.Add(startPos);
+                        startDir = map[i, j] switch
                         {
                             '^' => new Vector2Int(0, -1),
                             'v' => new Vector2Int(0, 1),
@@ -37,20 +41,84 @@ namespace AdventOfCode
                     }
                 }
             }
+
+            RunGuard(startPos, startDir, onStep: (pos, dir) => { visited.Add(pos); return true; });
+
+            Console.WriteLine($"First star: {visited.Count}");
+
+            int nbObstructionsCausingLoop = 0;
+
+            foreach (Vector2Int visitedPos in visited)
+            {
+                if (visitedPos == startPos)
+                    continue; // we don't want to obstruct guard's starting position
+
+                HashSet<(Vector2Int Pos, Vector2Int Dir)> visitedSecond = new()
+                {
+                    (startPos, startDir)
+                };
+                map[visitedPos.y, visitedPos.x] = '#';
+
+                RunGuard(startPos, startDir, onObstacle: (pos, dir) => {
+                    if (!visitedSecond.Add((pos, dir)))
+                    {
+                        nbObstructionsCausingLoop++;
+                        return false;
+                    }
+                    return true;
+                });
+
+                map[visitedPos.y, visitedPos.x] = '.';
+            }
+
+            Console.WriteLine($"Second star: {nbObstructionsCausingLoop}");
+        }
+
+        /// <param name="onStep">If returns false, tells this method to return immediately.</param>
+        void RunGuard(
+            Vector2Int startPos,
+            Vector2Int startDir,
+            Func<Vector2Int, Vector2Int, bool>? onStep = null,
+            Func<Vector2Int, Vector2Int, bool>? onObstacle = null)
+        {
+            Vector2Int pos = new(startPos);
+            Vector2Int dir = new(startDir);
             while (true)
             {
-                Vector2Int nextPos = guardPos + guardDir;
-                if (nextPos.x < 0 || nextPos.x >= width || nextPos.y < 0 || nextPos.y >= height)
+                Vector2Int? newDir = GetNextDir(pos, dir);
+                if (newDir is null)
                     break;
 
-                if (map[nextPos.y, nextPos.x] == '#')
+                while (map[pos.y + newDir.y, pos.x + newDir.x] == '#')
+                    newDir = GetNextDir(pos, newDir)!;
+
+                pos += newDir;
+                if (dir.x != newDir.x || dir.y != newDir.y)
                 {
-                    guardDir.Rotate(90);
+                    dir = newDir;
+                    if (onObstacle is not null && !onObstacle.Invoke(pos, dir))
+                        return;
                 }
-                guardPos += guardDir;
-                visited.Add(guardPos);
+                if (onStep is not null && !onStep.Invoke(pos, dir))
+                    return;
             }
-            Console.WriteLine($"First star: {visited.Count}");
+        }
+
+        /// <returns>
+        /// null if out of bounds
+        /// </returns>
+        Vector2Int? GetNextDir(Vector2Int pos, Vector2Int dir)
+        {
+            Vector2Int nextDir = new(dir);
+            Vector2Int nextPos = pos + dir;
+            if (nextPos.x < 0 || nextPos.x >= width || nextPos.y < 0 || nextPos.y >= height)
+                return null;
+
+            if (map[nextPos.y, nextPos.x] == '#')
+            {
+                nextDir.Rotate(90);
+            }
+            return nextDir;
         }
     }
 }
