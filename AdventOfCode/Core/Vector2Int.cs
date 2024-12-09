@@ -57,10 +57,20 @@ namespace AdventOfCode.Core
 
         public int GetManhattanDistanceFromZero() => GetManhattanDistanceFrom(Zero);
 
+        /// <summary>
+        /// Basically subtraction, but absolute.
+        /// </summary>
         public int GetManhattanDistanceFrom(Vector2Int other)
         {
             var delta = other - this;
             return Math.Abs(delta.x) + Math.Abs(delta.y);
+        }
+
+        public bool In(Vector2Int size) => In(Zero, size);
+
+        public bool In(Vector2Int topLeft, Vector2Int size)
+        {
+            return x >= topLeft.x && x < topLeft.x + size.x && y >= topLeft.y && y < topLeft.y + size.y;
         }
 
         public void Rotate(int degrees)
