@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace AdventOfCode
 {
@@ -9,24 +10,36 @@ namespace AdventOfCode
         public override void Run()
         {
             UseTestInput();
+            Console.WriteLine(GetFirstStar());
+        }
+
+        long GetFirstStar()
+        {
             int lastIdx = Text.Length - 1; // to decrease by 2 whenever lastCount is down to 0
             int lastCount = Text[lastIdx] - '0'; // to update whenever lastIdx changes
             int lastValue = lastIdx / 2; // to update whenever lastIdx changes
+            int lastSpaces = 0; // total spaces from the right to the left
             long firstStar = 0;
-            int pos = 0;
+            int currentIdx = 0;
             bool representsFreeSpace = false;
+            int total = Text.Sum(c => c - '0');
             for (int i = 0; i < Text.Length; i++)
             {
                 int value = Text[i] - '0';
                 if (representsFreeSpace)
                 {
-                    for (int j = 0; j < value; j++)
+                    for (int j = 0; j < value; j++, currentIdx++)
                     {
-                        firstStar += (pos + j) * lastValue;
+                        if (currentIdx >= total - lastSpaces - lastIdx)
+                            return firstStar;
+
+                        firstStar += currentIdx * lastValue;
                         lastCount--;
                         if (lastCount == 0)
                         {
-                            lastIdx -= 2;
+                            lastIdx--;
+                            lastSpaces += Text[lastIdx] - '0';
+                            lastIdx--;
                             lastCount = Text[lastIdx] - '0';
                             lastValue = lastIdx / 2;
                         }
@@ -34,15 +47,18 @@ namespace AdventOfCode
                 }
                 else
                 {
-                    for (int j = 0; j < value; j++)
+                    for (int j = 0; j < value; j++, currentIdx++)
                     {
-                        firstStar += (pos + j) * (i / 2);
+                        if (currentIdx >= total - lastSpaces - lastIdx)
+                            return firstStar;
+
+                        firstStar += currentIdx * (i / 2);
                     }
                 }
-                pos += value;
                 representsFreeSpace = !representsFreeSpace;
             }
-            Console.WriteLine(firstStar);
+
+            return firstStar;
         }
     }
 }
