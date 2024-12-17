@@ -9,6 +9,7 @@ namespace AdventOfCode
 
         protected override Test[] TestsFirstStar => new[]
         {
+            new Test("101", 1),
             new Test("12345", 60),
             new Test("2333133121414131402", 1928)
         };
@@ -18,41 +19,41 @@ namespace AdventOfCode
             int lastIdx = Text.Length - 1; // to decrease by 2 whenever lastCount is down to 0
             int lastCount = Text[lastIdx] - '0'; // to update whenever lastIdx changes
             int lastValue = lastIdx / 2; // to update whenever lastIdx changes
-            int lastSpaces = 0; // total spaces from the right to the left
             long firstStar = 0;
-            int currentIdx = 0;
+            int currentIdxInExpandedString = 0; // if Text = "123", the expanded string is "0..111"
             bool representsFreeSpace = false;
-            int total = Text.Sum(c => c - '0');
+            int lastIdxInExpandedString = Text.Sum(c => c - '0') - 1;
             for (int i = 0; i < Text.Length; i++)
             {
                 int value = Text[i] - '0';
                 if (representsFreeSpace)
                 {
-                    for (int j = 0; j < value; j++, currentIdx++)
+                    for (int j = 0; j < value; j++, currentIdxInExpandedString++)
                     {
-                        if (currentIdx >= total - lastSpaces - lastIdx)
-                            return firstStar;
-
-                        firstStar += currentIdx * lastValue;
+                        firstStar += currentIdxInExpandedString * lastValue;
                         lastCount--;
+                        lastIdxInExpandedString--;
                         if (lastCount == 0)
                         {
                             lastIdx--;
-                            lastSpaces += Text[lastIdx] - '0';
+                            lastIdxInExpandedString -= Text[lastIdx] - '0';
                             lastIdx--;
                             lastCount = Text[lastIdx] - '0';
                             lastValue = lastIdx / 2;
                         }
+
+                        if (currentIdxInExpandedString >= lastIdxInExpandedString)
+                            return firstStar;
                     }
                 }
                 else
                 {
-                    for (int j = 0; j < value; j++, currentIdx++)
+                    for (int j = 0; j < value; j++, currentIdxInExpandedString++)
                     {
-                        if (currentIdx >= total - lastSpaces - lastIdx)
-                            return firstStar;
+                        firstStar += currentIdxInExpandedString * (i / 2);
 
-                        firstStar += currentIdx * (i / 2);
+                        if (currentIdxInExpandedString >= lastIdxInExpandedString)
+                            return firstStar;
                     }
                 }
                 representsFreeSpace = !representsFreeSpace;
