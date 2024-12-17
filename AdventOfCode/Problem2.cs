@@ -11,8 +11,6 @@ namespace AdventOfCode
         protected string Text { get; private set; }
         protected string[] Lines { get; private set; }
 
-        protected virtual int? TestFileNumber => null;
-
         /// <summary>
         /// Implement this if you have some operations to do before running all the tests.
         /// </summary>
@@ -21,6 +19,8 @@ namespace AdventOfCode
         public virtual long GetFirstStar() => 0;
         public virtual long GetSecondStar() => 0;
 
+        private string ThisFolderPath => $"../../../{Year}/{Number.ToString().PadLeft(2, '0')}/";
+
         protected Problem2()
         {
             Parse();
@@ -28,11 +28,7 @@ namespace AdventOfCode
             RunTests(TestsFirstStar, GetFirstStar);
             RunTests(TestsSecondStar, GetSecondStar);
 
-            string inputFilePath = $"../../../{Year}/{Number.ToString().PadLeft(2, '0')}/" +
-                $"{(TestFileNumber is null ? "puzzle" : $"test_{TestFileNumber}")}.txt";
-
-            Text = File.ReadAllText(inputFilePath);
-            Lines = File.ReadAllLines(inputFilePath);
+            InitTextAndLines(ThisFolderPath + "puzzle.txt");
         }
 
         #region Tests
@@ -49,8 +45,18 @@ namespace AdventOfCode
             Console.WriteLine("----------");
             for (int i = 0; i < tests.Length; i++)
             {
-                Text = tests[i].Input;
-                Lines = Text.Split('\n');
+                string input = tests[i].Input;
+                string filePath = ThisFolderPath + input;
+                if (File.Exists(filePath))
+                {
+                    InitTextAndLines(filePath);
+                }
+                else
+                {
+                    Text = input;
+                    Lines = Text.Split('\n');
+                }
+                
                 long result = func();
                 long expected = tests[i].Expected;
                 string message = result == expected
@@ -59,6 +65,12 @@ namespace AdventOfCode
                 Console.WriteLine($"TEST {i + 1} {message}");
             }
             Console.WriteLine("----------");
+        }
+
+        private void InitTextAndLines(string filePath)
+        {
+            Text = File.ReadAllText(filePath);
+            Lines = File.ReadAllLines(filePath);
         }
 
         #endregion
