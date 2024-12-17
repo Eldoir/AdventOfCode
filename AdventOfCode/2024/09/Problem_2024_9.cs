@@ -1,20 +1,19 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 
 namespace AdventOfCode
 {
-    class Problem_2024_9 : Problem
+    class Problem_2024_9 : Problem2
     {
         public override int Year => 2024;
         public override int Number => 9;
 
-        public override void Run()
+        protected override Test[] TestsFirstStar => new[]
         {
-            UseTestInput();
-            Console.WriteLine(GetFirstStar());
-        }
+            new Test("12345", 60),
+            new Test("2333133121414131402", 1928)
+        };
 
-        long GetFirstStar()
+        public override long GetFirstStar()
         {
             int lastIdx = Text.Length - 1; // to decrease by 2 whenever lastCount is down to 0
             int lastCount = Text[lastIdx] - '0'; // to update whenever lastIdx changes
