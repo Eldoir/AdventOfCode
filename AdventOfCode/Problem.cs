@@ -30,25 +30,13 @@ namespace AdventOfCode
         private void InitTextAndLines()
         {
             string inputFilePath = GetInputFilePath();
-            if (!File.Exists(inputFilePath))
-            {
-                inputFilePath = GetInputFilePath2();
-            }
             Text = File.ReadAllText(inputFilePath);
             Lines = File.ReadAllLines(inputFilePath);
         }
 
         private string GetInputFilePath()
         {
-            return $"../../../input/{Year}/{Number}" +
-                   (_useTestInput ? "_test" : "") +
-                   (_useTestInput && _testFileNumber > 1 ? $"_{_testFileNumber}" : "") +
-                   ".txt";
-        }
-
-        private string GetInputFilePath2()
-        {
-            return $"../../../{Year}/{Number}/{(_useTestInput ? $"test_{_testFileNumber}" : "puzzle")}.txt";
+            return $"../../../{Year}/{Number.ToString().PadLeft(2, '0')}/{(_useTestInput ? $"test_{_testFileNumber}" : "puzzle")}.txt";
         }
 
         private bool _useTestInput = false;
