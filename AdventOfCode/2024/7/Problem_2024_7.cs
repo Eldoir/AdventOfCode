@@ -5,8 +5,9 @@ using System.Linq;
 
 namespace AdventOfCode
 {
-    class Problem_2024_7 : Problem_2024
+    class Problem_2024_7 : Problem
     {
+        public override int Year => 2024;
         public override int Number => 7;
 
         delegate long Compute(long a, long b);

@@ -3,8 +3,9 @@ using System.Linq;
 
 namespace AdventOfCode
 {
-    class Problem_2024_2 : Problem_2024
+    class Problem_2024_2 : Problem
     {
+        public override int Year => 2024;
         public override int Number => 2;
 
         public override void Run()

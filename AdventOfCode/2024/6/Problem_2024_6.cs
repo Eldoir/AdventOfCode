@@ -5,8 +5,9 @@ using System.Collections.Generic;
 
 namespace AdventOfCode
 {
-    class Problem_2024_6 : Problem_2024
+    class Problem_2024_6 : Problem
     {
+        public override int Year => 2024;
         public override int Number => 6;
 
         int height, width;

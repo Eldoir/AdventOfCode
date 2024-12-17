@@ -1,12 +1,12 @@
 ﻿using AdventOfCode.Core;
-using AdventOfCode.Utils;
 using System;
 using System.Collections.Generic;
 
 namespace AdventOfCode
 {
-    class Problem_2024_8 : Problem_2024
+    class Problem_2024_8 : Problem
     {
+        public override int Year => 2024;
         public override int Number => 8;
 
         public override void Run()

@@ -10,8 +10,7 @@ namespace AdventOfCode
         public string Text { get; private set; }
         public string[] Lines { get; private set; }
 
-        private bool useTestInput = false;
-        private int testFileNumber;
+        public abstract void Run();
 
         public void Init()
         {
@@ -19,9 +18,22 @@ namespace AdventOfCode
             InitInternal();
         }
 
+        protected virtual void InitInternal() { }
+
+        protected void UseTestInput(int testFileNumber = 1)
+        {
+            _useTestInput = true;
+            _testFileNumber = testFileNumber;
+            InitTextAndLines();
+        }
+
         private void InitTextAndLines()
         {
             string inputFilePath = GetInputFilePath();
+            if (!File.Exists(inputFilePath))
+            {
+                inputFilePath = GetInputFilePath2();
+            }
             Text = File.ReadAllText(inputFilePath);
             Lines = File.ReadAllLines(inputFilePath);
         }
@@ -29,20 +41,17 @@ namespace AdventOfCode
         private string GetInputFilePath()
         {
             return $"../../../input/{Year}/{Number}" +
-                   (useTestInput ? "_test" : "") +
-                   (useTestInput && testFileNumber > 1 ? $"_{testFileNumber}" : "") +
+                   (_useTestInput ? "_test" : "") +
+                   (_useTestInput && _testFileNumber > 1 ? $"_{_testFileNumber}" : "") +
                    ".txt";
         }
 
-        protected void UseTestInput(int testFileNumber = 1)
+        private string GetInputFilePath2()
         {
-            useTestInput = true;
-            this.testFileNumber = testFileNumber;
-            InitTextAndLines();
+            return $"../../../{Year}/{Number}/{(_useTestInput ? $"test_{_testFileNumber}" : "puzzle")}.txt";
         }
 
-        protected virtual void InitInternal() { }
-
-        public abstract void Run();
+        private bool _useTestInput = false;
+        private int _testFileNumber;
     }
 }

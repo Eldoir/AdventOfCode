@@ -5,8 +5,9 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode
 {
-    class Problem_2024_3 : Problem_2024
+    class Problem_2024_3 : Problem
     {
+        public override int Year => 2024;
         public override int Number => 3;
 
         public override void Run()
