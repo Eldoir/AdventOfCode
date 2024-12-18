@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace AdventOfCode
@@ -16,33 +17,33 @@ namespace AdventOfCode
 
         private string ThisFolderPath => $"../../../{Year}/{Number.ToString().PadLeft(2, '0')}/";
 
-        protected Problem2()
+        public void InitPuzzle()
         {
             InitTextAndLines(ThisFolderPath + "puzzle.txt");
         }
 
         #region Tests
 
+        public record TestReport(bool Success, string ErrorMessage);
+
         protected record Test(string Input, long Expected);
         protected virtual Test[] TestsFirstStar => Array.Empty<Test>();
         protected virtual Test[] TestsSecondStar => Array.Empty<Test>();
 
-        public void RunTestsFirstStar()
+        public TestReport[] RunTestsFirstStar()
         {
-            RunTests(TestsFirstStar, GetFirstStar);
+            return RunTests(TestsFirstStar, GetFirstStar);
         }
 
-        public void RunTestsSecondStar()
+        public TestReport[] RunTestsSecondStar()
         {
-            RunTests(TestsSecondStar, GetSecondStar);
+            return RunTests(TestsSecondStar, GetSecondStar);
         }
 
-        private void RunTests(Test[] tests, Func<long> func)
+        private TestReport[] RunTests(Test[] tests, Func<long> func)
         {
-            if (tests.Length == 0)
-                return;
+            List<TestReport> reports = new();
 
-            Console.WriteLine("----------");
             for (int i = 0; i < tests.Length; i++)
             {
                 string input = tests[i].Input;
@@ -59,12 +60,11 @@ namespace AdventOfCode
                 
                 long result = func();
                 long expected = tests[i].Expected;
-                string message = result == expected
-                    ? "OK"
-                    : $"Failed (expected: {expected}, got: {result})";
-                Console.WriteLine($"TEST {i + 1} {message}");
+                bool success = result == expected;
+                reports.Add(new TestReport(success, success ? string.Empty : $"Failed (expected: {expected}, got: {result})"));
             }
-            Console.WriteLine("----------");
+
+            return reports.ToArray();
         }
 
         private void InitTextAndLines(string filePath)
