@@ -18,9 +18,6 @@ namespace AdventOfCode
 
         protected Problem2()
         {
-            RunTests(TestsFirstStar, GetFirstStar);
-            RunTests(TestsSecondStar, GetSecondStar);
-
             InitTextAndLines(ThisFolderPath + "puzzle.txt");
         }
 
@@ -29,6 +26,16 @@ namespace AdventOfCode
         protected record Test(string Input, long Expected);
         protected virtual Test[] TestsFirstStar => Array.Empty<Test>();
         protected virtual Test[] TestsSecondStar => Array.Empty<Test>();
+
+        public void RunTestsFirstStar()
+        {
+            RunTests(TestsFirstStar, GetFirstStar);
+        }
+
+        public void RunTestsSecondStar()
+        {
+            RunTests(TestsSecondStar, GetSecondStar);
+        }
 
         private void RunTests(Test[] tests, Func<long> func)
         {
