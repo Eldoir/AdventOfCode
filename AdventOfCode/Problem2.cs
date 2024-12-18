@@ -11,11 +11,6 @@ namespace AdventOfCode
         protected string Text { get; private set; }
         protected string[] Lines { get; private set; }
 
-        /// <summary>
-        /// Implement this if you have some operations to do before running all the tests.
-        /// </summary>
-        protected virtual void Parse() { }
-
         public virtual long GetFirstStar() => 0;
         public virtual long GetSecondStar() => 0;
 
@@ -23,8 +18,6 @@ namespace AdventOfCode
 
         protected Problem2()
         {
-            Parse();
-
             RunTests(TestsFirstStar, GetFirstStar);
             RunTests(TestsSecondStar, GetSecondStar);
 
