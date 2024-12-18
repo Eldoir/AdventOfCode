@@ -58,29 +58,29 @@ namespace AdventOfCode
 
         public override long GetSecondStar()
         {
-            // key is idx
-            List<FreeSpaceSlot> freeSpaceSlots = new();
+            List<Block> freeSlots = new();
 
             // Setup
             long secondStar = 0;
             int currentIdxInExpandedString = 0;
             bool representsFreeSpace = false;
-            Dictionary<int, (int StartIdxInExpandedString, int Count)> files = new(); // key is idx in Text
+            Dictionary<int, Block> files = new(); // key is Block.Idx
             for(int i = 0; i < Text.Length; i++)
             {
                 int count = Text[i] - '0';
+                Block block = new()
+                {
+                    Idx = i,
+                    StartIdxInExpandedString = currentIdxInExpandedString,
+                    Count = count
+                };
                 if (representsFreeSpace)
                 {
-                    freeSpaceSlots.Add(new FreeSpaceSlot
-                    {
-                        Idx = i,
-                        StartIdxInExpandedString = currentIdxInExpandedString,
-                        Available = count
-                    });
+                    freeSlots.Add(block);
                 }
                 else
                 {
-                    files.Add(i, (currentIdxInExpandedString, count));
+                    files.Add(i, block);
                 }
                 currentIdxInExpandedString += count;
                 representsFreeSpace = !representsFreeSpace;
@@ -92,44 +92,48 @@ namespace AdventOfCode
                 int count = Text[i] - '0';
                 int value = i / 2;
                 // Find the leftmost available slot
-                for (int j = 0; j < freeSpaceSlots.Count; j++)
+                for (int j = 0; j < freeSlots.Count; j++)
                 {
-                    FreeSpaceSlot slot = freeSpaceSlots[j];
-                    if (slot.Idx > i) // search only for left slots
+                    Block freeSlot = freeSlots[j];
+
+                    if (freeSlot.Idx > i) // search only for left slots
                         break;
 
-                    if (freeSpaceSlots[j].Available >= count)
+                    if (freeSlot.Count >= count)
                     {
                         files.Remove(i); // Remove this file for the end count since we're gonna count it right now
                         for (int k = 0; k < count; k++)
                         {
-                            secondStar += (slot.StartIdxInExpandedString + k) * value;
+                            secondStar += (freeSlot.StartIdxInExpandedString + k) * value;
                         }
-                        freeSpaceSlots[j].Available -= count;
-                        freeSpaceSlots[j].StartIdxInExpandedString += count;
+                        freeSlot.Count -= count;
+                        freeSlot.StartIdxInExpandedString += count;
                         break;
                     }
                 }
             }
 
             // Count files that did not move
-            foreach (var file in files)
+            foreach (var kvp in files)
             {
-                int value = file.Key / 2;
-                for (int i = 0; i < file.Value.Count; i++)
+                int value = kvp.Key / 2;
+                for (int i = 0; i < kvp.Value.Count; i++)
                 {
-                    secondStar += (file.Value.StartIdxInExpandedString + i) * value;
+                    secondStar += (kvp.Value.StartIdxInExpandedString + i) * value;
                 }
             }
 
             return secondStar;
         }
 
-        class FreeSpaceSlot
+        /// <summary>
+        /// Either a file, or free space
+        /// </summary>
+        class Block
         {
             public int Idx;
             public int StartIdxInExpandedString;
-            public int Available;
+            public int Count;
         }
 
         protected override Test[] TestsFirstStar => new[]
