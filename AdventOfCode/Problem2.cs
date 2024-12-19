@@ -15,17 +15,23 @@ namespace AdventOfCode
         public virtual long GetFirstStar() => 0;
         public virtual long GetSecondStar() => 0;
 
+        /// <summary>
+        /// If true, will run 1000 times P1 and P2 and print the average.
+        /// </summary>
+        public virtual bool Measure => false;
+
         private string ThisFolderPath => $"../../../{Year}/{Number.ToString().PadLeft(2, '0')}/";
+        private const string PuzzleFileName = "puzzle.txt";
 
         public void InitPuzzle()
         {
-            InitTextAndLines(ThisFolderPath + "puzzle.txt");
+            InitTextAndLines(Path.Join(ThisFolderPath, PuzzleFileName));
         }
 
         #region Tests
 
         public record TestReport(bool Success, string ErrorMessage);
-
+        protected static Test TestPuzzle(long expected) => new Test(PuzzleFileName, expected);
         protected record Test(string Input, long Expected);
         protected virtual Test[] TestsFirstStar => Array.Empty<Test>();
         protected virtual Test[] TestsSecondStar => Array.Empty<Test>();

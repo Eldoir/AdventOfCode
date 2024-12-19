@@ -17,9 +17,12 @@ namespace AdventOfCode
             prob.InitPuzzle();
 
             // Measure
-            const int nbRuns = 1000;
-            PrintAverageMS("P1", nbRuns, () => prob.GetFirstStar());
-            PrintAverageMS("P2", nbRuns, () => prob.GetSecondStar());
+            if (prob.Measure)
+            {
+                const int nbRuns = 1000;
+                PrintAverageMS("P1", nbRuns, () => prob.GetFirstStar());
+                PrintAverageMS("P2", nbRuns, () => prob.GetSecondStar());
+            }
 
             // First star
             long firstStar = prob.GetFirstStar();
