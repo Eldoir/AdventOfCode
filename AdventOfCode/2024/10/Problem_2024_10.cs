@@ -79,6 +79,11 @@ namespace AdventOfCode
             #endregion
         }
 
+        public override long GetSecondStar()
+        {
+            return 1;
+        }
+
         protected override Test[] TestsFirstStar =>
         [
             new("test_1.txt", 2),
@@ -88,6 +93,12 @@ namespace AdventOfCode
             TestPuzzle(822)
         ];
 
-        protected override Test[] TestsSecondStar => base.TestsSecondStar;
+        protected override Test[] TestsSecondStar =>
+        [
+            new("test_p2_1.txt", 3),
+            new("test_p2_2.txt", 13),
+            new("test_p2_3.txt", 227),
+            new("test_4.txt", 81)
+        ];
     }
 }
