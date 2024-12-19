@@ -8,7 +8,7 @@ namespace AdventOfCode
     {
         static void Main()
         {
-            Problem_2024_9 prob = new();
+            Problem_2024_10 prob = new();
 
             // Tests
             TestReport[] reportsFirstStar = prob.RunTestsFirstStar();
