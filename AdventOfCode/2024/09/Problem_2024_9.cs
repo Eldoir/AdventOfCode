@@ -136,20 +136,20 @@ namespace AdventOfCode
             public int Count;
         }
 
-        protected override Test[] TestsFirstStar => new[]
+        protected override Test[] TestsFirstStar => new Test[]
         {
-            new Test("101", 1),
-            new Test("12345", 60),
-            new Test("2333133121414131402", 1928),
+            new("101", 1),
+            new("12345", 60),
+            new("2333133121414131402", 1928),
             TestPuzzle(6401092019345)
         };
 
-        protected override Test[] TestsSecondStar => new[]
+        protected override Test[] TestsSecondStar => new Test[]
         {
-            new Test("101", 1),
-            new Test("12345", 132),
-            new Test("54321", 31),
-            new Test("2333133121414131402", 2858),
+            new("101", 1),
+            new("12345", 132),
+            new("54321", 31),
+            new("2333133121414131402", 2858),
             TestPuzzle(6431472344710)
         };
     }
