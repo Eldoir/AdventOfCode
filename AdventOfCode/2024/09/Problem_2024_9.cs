@@ -140,7 +140,8 @@ namespace AdventOfCode
         {
             new Test("101", 1),
             new Test("12345", 60),
-            new Test("2333133121414131402", 1928)
+            new Test("2333133121414131402", 1928),
+            TestPuzzle(6401092019345)
         };
 
         protected override Test[] TestsSecondStar => new[]
@@ -148,7 +149,8 @@ namespace AdventOfCode
             new Test("101", 1),
             new Test("12345", 132),
             new Test("54321", 31),
-            new Test("2333133121414131402", 2858)
+            new Test("2333133121414131402", 2858),
+            TestPuzzle(6431472344710)
         };
     }
 }
