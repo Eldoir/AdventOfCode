@@ -54,45 +54,29 @@ namespace AdventOfCode
                     continue;
                 }
 
-                Vector2Int leftNeighbor = v + Vector2Int.Left;
-                if (v.x > 0 && map[leftNeighbor.y, leftNeighbor.x] == value + 1)
+                if (v.x > 0) TryVisiting(v + Vector2Int.Left, value);
+                if (v.x < width - 1) TryVisiting(v + Vector2Int.Right, value);
+                if (v.y > 0) TryVisiting(v + Vector2Int.Down, value);
+                if (v.y < height - 1) TryVisiting(v + Vector2Int.Up, value);
+            }
+
+            return score;
+
+            #region Local methods
+
+            void TryVisiting(Vector2Int pos, int value)
+            {
+                if (map[pos.y, pos.x] == value + 1)
                 {
-                    if (!visited.Contains(leftNeighbor))
+                    if (!visited.Contains(pos))
                     {
-                        queue.Enqueue(leftNeighbor);
-                        visited.Add(leftNeighbor);
-                    }
-                }
-                Vector2Int rightNeighbor = v + Vector2Int.Right;
-                if (v.x < width - 1 && map[rightNeighbor.y, rightNeighbor.x] == value + 1)
-                {
-                    if (!visited.Contains(rightNeighbor))
-                    {
-                        queue.Enqueue(rightNeighbor);
-                        visited.Add(rightNeighbor);
-                    }
-                }
-                Vector2Int topNeighbor = v + Vector2Int.Down; // Y is 0 to N from top to bottom
-                if (v.y > 0 && map[topNeighbor.y, topNeighbor.x] == value + 1)
-                {
-                    if (!visited.Contains(topNeighbor))
-                    {
-                        queue.Enqueue(topNeighbor);
-                        visited.Add(topNeighbor);
-                    }
-                }
-                Vector2Int bottomNeighbor = v + Vector2Int.Up;
-                if (v.y < height - 1 && map[bottomNeighbor.y, bottomNeighbor.x] == value + 1)
-                {
-                    if (!visited.Contains(bottomNeighbor))
-                    {
-                        queue.Enqueue(bottomNeighbor);
-                        visited.Add(bottomNeighbor);
+                        queue.Enqueue(pos);
+                        visited.Add(pos);
                     }
                 }
             }
 
-            return score;
+            #endregion
         }
 
         protected override Test[] TestsFirstStar =>
@@ -100,7 +84,8 @@ namespace AdventOfCode
             new("test_1.txt", 2),
             new("test_2.txt", 4),
             new("test_3.txt", 3),
-            new("test_4.txt", 36)
+            new("test_4.txt", 36),
+            TestPuzzle(822)
         ];
 
         protected override Test[] TestsSecondStar => base.TestsSecondStar;
