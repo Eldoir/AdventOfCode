@@ -94,7 +94,7 @@ namespace AdventOfCode
                 // Find the leftmost available slot
                 for (int j = 0; j < freeSlots.Count; j++)
                 {
-                    Block freeSlot = freeSlots[j];
+                    Block freeSlot = freeSlots[j]; // beware this is a copy
 
                     if (freeSlot.Idx > i) // search only for left slots
                         break;
@@ -108,6 +108,7 @@ namespace AdventOfCode
                         }
                         freeSlot.Count -= count;
                         freeSlot.StartIdxInExpandedString += count;
+                        freeSlots[j] = freeSlot;
                         break;
                     }
                 }
@@ -129,7 +130,7 @@ namespace AdventOfCode
         /// <summary>
         /// Either a file, or free space
         /// </summary>
-        class Block
+        struct Block
         {
             public int Idx;
             public int StartIdxInExpandedString;
