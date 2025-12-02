@@ -107,7 +107,7 @@ namespace AdventOfCode
                 if (!success)
                 {
                     string testName = tests[i].Name ?? (fromFile ? $"\"{input}\"" : i.ToString());
-                    errorMessage = $"{testName}:  expected {expected}, got {result}";
+                    errorMessage = $"{testName}: expected {expected}, got {result}";
                 }
 
                 reports.Add(new TestReport(success, errorMessage));
