@@ -8,13 +8,21 @@ namespace AdventOfCode
     {
         static void Main()
         {
-            // Change class name to change current problem here
             Problem_2025_1 prob = new();
 
-            // Tests
+            #region Config
+            /// <summary>
+            /// If true, will run {nbRuns} times P1 and P2 and print the average.
+            /// </summary>
+            bool measure = true;
+            const int nbRuns = 1000;
+
             bool runTests = true;
+            #endregion
+
             TestReport[] reportsFirstStar = [];
             TestReport[] reportsSecondStar = [];
+
             if (runTests)
             {
                 reportsFirstStar = prob.RunTestsFirstStar();
@@ -23,35 +31,89 @@ namespace AdventOfCode
 
             prob.InitPuzzle();
 
-            /// <summary>
-            /// If true, will run {nbRuns} times P1 and P2 and print the average.
-            /// </summary>
-            bool measure = false;
-            const int nbRuns = 1000;
-            if (measure)
-            {
-                PrintAverageMS("P1", nbRuns, () => prob.GetFirstStar());
-                PrintAverageMS("P2", nbRuns, () => prob.GetSecondStar());
-            }
-
-            // First star
-            long firstStar = prob.GetFirstStar();
+            #region First star
+            WriteHeader("FIRST STAR");
+            Stopwatch sw1 = Stopwatch.StartNew();
+            long firstStarResult = prob.GetFirstStar();
+            sw1.Stop();
             if (runTests)
             {
                 PrintTestReports(reportsFirstStar);
             }
-            Console.WriteLine($"First star: {firstStar}");
+            PrintStarResult(firstStarResult, sw1.Elapsed);
+            if (measure)
+            {
+                PrintAverageMS(nbRuns, () => prob.GetFirstStar());
+            }
+            #endregion
 
-            // Second star
-            long secondStar = prob.GetSecondStar();
+            #region Second star
+            WriteHeader("SECOND STAR");
+            Stopwatch sw2 = Stopwatch.StartNew();
+            long secondStarResult = prob.GetSecondStar();
+            sw2.Stop();
             if (runTests)
             {
                 PrintTestReports(reportsSecondStar);
             }
-            Console.WriteLine($"Second star: {secondStar}");
+            PrintStarResult(secondStarResult, sw2.Elapsed);
+            if (measure)
+            {
+                PrintAverageMS(nbRuns, () => prob.GetSecondStar());
+            }
+            #endregion
         }
 
-        static void PrintAverageMS(string msg, int nbRuns, Action run)
+        static void WriteHeader(string title)
+        {
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("╔══════════════════════════════════════╗");
+            Console.WriteLine($"║ {title.PadRight(36)} ║");
+            Console.WriteLine("╚══════════════════════════════════════╝");
+            Console.ResetColor();
+        }
+
+        static void PrintStarResult(long value, TimeSpan elapsed)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write("* ");
+            Console.Write($"Result: {value}");
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+            Console.WriteLine($" ({elapsed.TotalMilliseconds:0.000} ms)");
+            Console.ResetColor();
+        }
+
+        static void PrintTestReports(TestReport[] reports)
+        {
+            if (reports is null || reports.Length == 0) return;
+
+            Console.WriteLine("Tests:");
+
+            int nbOk = 0, nbFail = 0;
+            foreach (TestReport report in reports)
+            {
+                if (report.Success)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine($"  [V] {report.TestName}");
+                    nbOk++;
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine($"  [X] {report.TestName}: {report.ErrorMessage}");
+                    nbFail++;
+                }
+            }
+
+            Console.ResetColor();
+            Console.WriteLine("  ─────────────");
+            Console.ForegroundColor = nbFail == 0 ? ConsoleColor.Green : ConsoleColor.Red;
+            Console.WriteLine($"  {nbOk}/{reports.Length} passed");
+            Console.ResetColor();
+        }
+
+        static void PrintAverageMS(int nbRuns, Action run)
         {
             double totalMilliseconds = 0;
             for (int i = 0; i < nbRuns; i++)
@@ -61,23 +123,10 @@ namespace AdventOfCode
                 sw.Stop();
                 totalMilliseconds += sw.Elapsed.TotalMilliseconds;
             }
-            Console.WriteLine($"{msg} Avg (/{nbRuns}): {totalMilliseconds / nbRuns}ms");
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+            Console.WriteLine($"  Average: {(totalMilliseconds/nbRuns):0.000} ms ({nbRuns} runs)");
+            Console.ResetColor();
         }
 
-        static void PrintTestReports(TestReport[] reports)
-        {
-            if (reports.Length > 0)
-            {
-                Console.WriteLine("----------");
-                for (int i = 0; i < reports.Length; i++)
-                {
-                    string message = reports[i].Success
-                        ? "OK"
-                        : $"FAILED {reports[i].ErrorMessage}";
-                    Console.WriteLine(message);
-                }
-                Console.WriteLine("----------");
-            }
-        }
     }
 }

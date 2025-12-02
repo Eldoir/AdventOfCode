@@ -49,7 +49,7 @@ namespace AdventOfCode
 
         #region Tests
 
-        public record TestReport(bool Success, string ErrorMessage);
+        public record TestReport(string TestName, bool Success, string ErrorMessage);
 
         /// <summary>
         /// Will test against the puzzle file (usually puzzle.txt).
@@ -87,7 +87,8 @@ namespace AdventOfCode
             for (int i = 0; i < tests.Length; i++)
             {
                 string input = tests[i].Input;
-                string filePath = Path.Join(ThisFolderPath, $"{input}.txt");
+                string fileName = $"{input}.txt";
+                string filePath = Path.Join(ThisFolderPath, fileName);
                 bool fromFile = File.Exists(filePath);
                 if (fromFile)
                 {
@@ -104,13 +105,13 @@ namespace AdventOfCode
 
                 bool success = result == expected;
                 string errorMessage = string.Empty;
+                string testName = tests[i].Name ?? (fromFile ? fileName : i.ToString());
                 if (!success)
                 {
-                    string testName = tests[i].Name ?? (fromFile ? $"\"{input}\"" : i.ToString());
-                    errorMessage = $"{testName}: expected {expected}, got {result}";
+                    errorMessage = $"expected {expected}, got {result}";
                 }
 
-                reports.Add(new TestReport(success, errorMessage));
+                reports.Add(new TestReport(testName, success, errorMessage));
             }
 
             return reports.ToArray();
