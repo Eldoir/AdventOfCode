@@ -8,6 +8,7 @@ namespace AdventOfCode
     {
         static void Main()
         {
+            // Change class name to change current problem here
             Problem_2024_9 prob = new();
 
             // Tests
@@ -16,10 +17,13 @@ namespace AdventOfCode
 
             prob.InitPuzzle();
 
-            // Measure
-            if (prob.Measure)
+            /// <summary>
+            /// If true, will run {nbRuns} times P1 and P2 and print the average.
+            /// </summary>
+            bool measure = true;
+            const int nbRuns = 1000;
+            if (measure)
             {
-                const int nbRuns = 1000;
                 PrintAverageMS("P1", nbRuns, () => prob.GetFirstStar());
                 PrintAverageMS("P2", nbRuns, () => prob.GetSecondStar());
             }

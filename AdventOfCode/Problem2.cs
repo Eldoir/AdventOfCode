@@ -14,11 +14,6 @@ namespace AdventOfCode
         public virtual long GetFirstStar() => 0;
         public virtual long GetSecondStar() => 0;
 
-        /// <summary>
-        /// If true, will run 1000 times P1 and P2 and print the average.
-        /// </summary>
-        public virtual bool Measure => false;
-
         record class MetaInfo(int Year, int Number);
         private MetaInfo Meta
         {
