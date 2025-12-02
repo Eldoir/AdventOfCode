@@ -8,12 +8,13 @@ namespace AdventOfCode
 {
     abstract class Problem2
     {
-        protected string Text { get; private set; }
-        protected string[] Lines { get; private set; }
+        protected string? Text { get; private set; }
+        protected string[]? Lines { get; private set; }
 
         public virtual long GetFirstStar() => 0;
         public virtual long GetSecondStar() => 0;
 
+        #region MetaInfo
         record class MetaInfo(int Year, int Number);
         private MetaInfo Meta
         {
@@ -33,8 +34,9 @@ namespace AdventOfCode
 
         }
         private MetaInfo? _meta;
+        #endregion
 
-        private string ThisFolderPath => $"../../../{Meta.Year}/{Meta.Number.ToString().PadLeft(2, '0')}/";
+        private string ThisFolderPath => Path.Join("..", "..", "..", Meta.Year.ToString(), Meta.Number.ToString().PadLeft(2, '0'));
         private const string PuzzleFileName = "puzzle.txt";
 
         public void InitPuzzle()
@@ -45,10 +47,21 @@ namespace AdventOfCode
         #region Tests
 
         public record TestReport(bool Success, string ErrorMessage);
-        protected static Test TestPuzzle(long expected) => new Test(PuzzleFileName, expected);
+
+        /// <summary>
+        /// Will test against the puzzle file (usually puzzle.txt).
+        /// </summary>
+        protected static Test TestPuzzle(long expected) => new(PuzzleFileName, expected);
+
+        /// <param name="Input">
+        /// Can be a raw input, or a filename.
+        /// If it's a filename, the file should be a .txt, located in the same directory as the problem's class file.
+        /// Example: "first_test" will try to read "first_text.txt".
+        /// </param>
         protected record Test(string Input, long Expected);
-        protected virtual Test[] TestsFirstStar => Array.Empty<Test>();
-        protected virtual Test[] TestsSecondStar => Array.Empty<Test>();
+
+        protected virtual Test[] TestsFirstStar => [];
+        protected virtual Test[] TestsSecondStar => [];
 
         public TestReport[] RunTestsFirstStar()
         {
@@ -62,13 +75,14 @@ namespace AdventOfCode
 
         private TestReport[] RunTests(Test[] tests, Func<long> func)
         {
-            List<TestReport> reports = new();
+            List<TestReport> reports = [];
 
             for (int i = 0; i < tests.Length; i++)
             {
                 string input = tests[i].Input;
-                string filePath = ThisFolderPath + input;
-                if (File.Exists(filePath))
+                string filePath = Path.Join(ThisFolderPath, $"{input}.txt");
+                bool fromFile = File.Exists(filePath);
+                if (fromFile)
                 {
                     InitTextAndLines(filePath);
                 }
@@ -80,19 +94,27 @@ namespace AdventOfCode
                 
                 long result = func();
                 long expected = tests[i].Expected;
+
                 bool success = result == expected;
-                reports.Add(new TestReport(success, success ? string.Empty : $"Failed (expected: {expected}, got: {result})"));
+                string errorMessage = string.Empty;
+                if (!success)
+                {
+                    string testName = fromFile ? $"\"{input}\"" : i.ToString();
+                    errorMessage = $"{testName}:  expected {expected}, got {result}";
+                }
+
+                reports.Add(new TestReport(success, errorMessage));
             }
 
             return reports.ToArray();
         }
+
+        #endregion
 
         private void InitTextAndLines(string filePath)
         {
             Text = File.ReadAllText(filePath);
             Lines = File.ReadAllLines(filePath);
         }
-
-        #endregion
     }
 }

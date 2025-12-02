@@ -20,7 +20,7 @@ namespace AdventOfCode
             /// <summary>
             /// If true, will run {nbRuns} times P1 and P2 and print the average.
             /// </summary>
-            bool measure = true;
+            bool measure = false;
             const int nbRuns = 1000;
             if (measure)
             {
@@ -30,19 +30,13 @@ namespace AdventOfCode
 
             // First star
             long firstStar = prob.GetFirstStar();
-            if (firstStar != 0)
-            {
-                PrintTestReports(reportsFirstStar);
-                Console.WriteLine($"First star: {firstStar}");
-            }
+            PrintTestReports(reportsFirstStar);
+            Console.WriteLine($"First star: {firstStar}");
 
             // Second star
             long secondStar = prob.GetSecondStar();
-            if (secondStar != 0)
-            {
-                PrintTestReports(reportsSecondStar);
-                Console.WriteLine($"Second star: {secondStar}");
-            }
+            PrintTestReports(reportsSecondStar);
+            Console.WriteLine($"Second star: {secondStar}");
         }
 
         static void PrintAverageMS(string msg, int nbRuns, Action run)
@@ -67,7 +61,7 @@ namespace AdventOfCode
                 {
                     string message = reports[i].Success
                         ? "OK"
-                        : reports[i].ErrorMessage;
+                        : $"FAILED {reports[i].ErrorMessage}";
                     Console.WriteLine(message);
                 }
                 Console.WriteLine("----------");
