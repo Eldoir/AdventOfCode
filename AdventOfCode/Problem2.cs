@@ -61,7 +61,11 @@ namespace AdventOfCode
         /// If it's a filename, the file should be a .txt, located in the same directory as the problem's class file.
         /// Example: "first_test" will try to read "first_text.txt".
         /// </param>
-        protected record Test(string Input, long Expected);
+        /// <param name="TestName">
+        /// If null, then the name will be the filename if <paramref name="Input"/> is a filename,
+        /// OR the test number in the list of tests if <paramref name="Input"/> is a raw input.
+        /// </param>
+        protected record Test(string Input, long Expected, string? Name = null);
 
         protected virtual Test[] TestsFirstStar => [];
         protected virtual Test[] TestsSecondStar => [];
@@ -102,7 +106,7 @@ namespace AdventOfCode
                 string errorMessage = string.Empty;
                 if (!success)
                 {
-                    string testName = fromFile ? $"\"{input}\"" : i.ToString();
+                    string testName = tests[i].Name ?? (fromFile ? $"\"{input}\"" : i.ToString());
                     errorMessage = $"{testName}:  expected {expected}, got {result}";
                 }
 
