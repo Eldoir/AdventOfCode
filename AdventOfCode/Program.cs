@@ -14,7 +14,7 @@ namespace AdventOfCode
             /// <summary>
             /// If true, will run {nbRuns} times P1 and P2 and print the average.
             /// </summary>
-            bool measure = true;
+            bool measure = false;
             const int nbRuns = 1000;
 
             bool runTests = true;
