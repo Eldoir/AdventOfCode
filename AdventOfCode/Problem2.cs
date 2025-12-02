@@ -6,6 +6,9 @@ using System.Text.RegularExpressions;
 
 namespace AdventOfCode
 {
+    /// <summary>
+    /// Should be used after 2024.
+    /// </summary>
     abstract class Problem2
     {
         protected string? Text { get; private set; }

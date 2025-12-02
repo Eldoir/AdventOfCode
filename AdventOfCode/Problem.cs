@@ -1,7 +1,9 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace AdventOfCode
 {
+    [Obsolete($"Use {nameof(Problem2)} instead.")]
     abstract class Problem
     {
         public abstract int Year { get; }
