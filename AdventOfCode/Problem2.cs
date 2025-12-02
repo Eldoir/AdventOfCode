@@ -1,14 +1,13 @@
-﻿using System;
+﻿#nullable enable
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace AdventOfCode
 {
     abstract class Problem2
     {
-        public abstract int Year { get; }
-        public abstract int Number { get; }
-
         protected string Text { get; private set; }
         protected string[] Lines { get; private set; }
 
@@ -20,7 +19,27 @@ namespace AdventOfCode
         /// </summary>
         public virtual bool Measure => false;
 
-        private string ThisFolderPath => $"../../../{Year}/{Number.ToString().PadLeft(2, '0')}/";
+        record class MetaInfo(int Year, int Number);
+        private MetaInfo Meta
+        {
+            get
+            {
+                if (_meta is null)
+                {
+                    string className = GetType().Name;
+                    const string pattern = @"^Problem_(\d+)_(\d+)";
+                    Match match = Regex.Match(className, pattern);
+                    if (!match.Success)
+                        throw new InvalidOperationException($"Problem class name must comply with: \"{pattern}\"");
+                    return new MetaInfo(int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value));
+                }
+                return _meta;
+            }
+
+        }
+        private MetaInfo? _meta;
+
+        private string ThisFolderPath => $"../../../{Meta.Year}/{Meta.Number.ToString().PadLeft(2, '0')}/";
         private const string PuzzleFileName = "puzzle.txt";
 
         public void InitPuzzle()

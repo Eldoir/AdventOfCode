@@ -5,9 +5,6 @@ namespace AdventOfCode
 {
     class Problem_2024_9 : Problem2
     {
-        public override int Year => 2024;
-        public override int Number => 9;
-
         public override long GetFirstStar()
         {
             int lastIdx = Text.Length - 1; // to decrease by 2 whenever lastCount is down to 0
