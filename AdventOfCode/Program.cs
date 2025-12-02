@@ -12,8 +12,14 @@ namespace AdventOfCode
             Problem_2025_1 prob = new();
 
             // Tests
-            TestReport[] reportsFirstStar = prob.RunTestsFirstStar();
-            TestReport[] reportsSecondStar = prob.RunTestsSecondStar();
+            bool runTests = true;
+            TestReport[] reportsFirstStar = [];
+            TestReport[] reportsSecondStar = [];
+            if (runTests)
+            {
+                reportsFirstStar = prob.RunTestsFirstStar();
+                reportsSecondStar = prob.RunTestsSecondStar();
+            }
 
             prob.InitPuzzle();
 
@@ -30,12 +36,18 @@ namespace AdventOfCode
 
             // First star
             long firstStar = prob.GetFirstStar();
-            PrintTestReports(reportsFirstStar);
+            if (runTests)
+            {
+                PrintTestReports(reportsFirstStar);
+            }
             Console.WriteLine($"First star: {firstStar}");
 
             // Second star
             long secondStar = prob.GetSecondStar();
-            PrintTestReports(reportsSecondStar);
+            if (runTests)
+            {
+                PrintTestReports(reportsSecondStar);
+            }
             Console.WriteLine($"Second star: {secondStar}");
         }
 
