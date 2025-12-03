@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace AdventOfCode
+﻿namespace AdventOfCode
 {
     class Problem_2025_1 : Problem2
     {
