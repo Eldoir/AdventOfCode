@@ -105,7 +105,7 @@ namespace AdventOfCode
 
                 bool success = result == expected;
                 string errorMessage = string.Empty;
-                string testName = tests[i].Name ?? (fromFile ? fileName : i.ToString());
+                string testName = tests[i].Name ?? (fromFile ? fileName : $"Test {i}");
                 if (!success)
                 {
                     errorMessage = $"expected {expected}, got {result}";
