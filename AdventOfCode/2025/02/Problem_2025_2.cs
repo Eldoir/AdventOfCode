@@ -4,23 +4,28 @@
     {
         public override long GetFirstStar()
         {
-            Range[] ranges = GetRanges(Text);
+            return RunAlgo(Text, 2);
+        }
+
+        public override long GetSecondStar()
+        {
+            return RunAlgo(Text, 10);
+        }
+
+        private static long RunAlgo(string text, int maxRepetitions)
+        {
+            Range[] ranges = GetRanges(text);
             long sum = 0;
 
             foreach (Range range in ranges)
             {
                 for (long i = range.Start; i <= range.End; i++)
                 {
-                    if (IsInvalid(i, 2)) sum += i;
+                    if (IsInvalid(i, maxRepetitions)) sum += i;
                 }
             }
 
             return sum;
-        }
-
-        public override long GetSecondStar()
-        {
-            return 0;
         }
 
         private static Range[] GetRanges(string text)
@@ -69,6 +74,13 @@
             new Test("example", 1227775554),
             new Test("11-22,95-115", 132, Name: "11,22,99"),
             new Test("998-1012", 1010, Name: "1010")
+        ];
+
+        protected override Test[] TestsSecondStar =>
+        [
+            new Test("example", 4174379265),
+            new Test("11-22,95-115", 243, Name: "11,22,99,111"),
+            new Test("998-1012", 2009, Name: "999,1010")
         ];
     }
 }
