@@ -8,7 +8,7 @@ namespace AdventOfCode
     {
         static void Main()
         {
-            Problem_2025_2 prob = new();
+            Problem_2025_3 prob = new();
 
             #region Config
             /// <summary>
@@ -127,6 +127,5 @@ namespace AdventOfCode
             Console.WriteLine($"  Average: {(totalMilliseconds/nbRuns):0.000} ms ({nbRuns} runs)");
             Console.ResetColor();
         }
-
     }
 }
