@@ -9,7 +9,7 @@ namespace AdventOfCode.Extensions
     {
         public static int[] IndexesOf(this string str, string needle)
         {
-            List<int> indexes = new();
+            List<int> indexes = [];
             for (int i = 0; i < str.Length; i++)
             {
                 if (str[i..].StartsWith(needle))
@@ -62,10 +62,10 @@ namespace AdventOfCode.Extensions
         /// </summary>
         public static int[] ToIntArray(this string str)
         {
-            var regex = new Regex(@"\s*(\d+)");
+            Regex regex = new(@"\s*(\d+)");
             var matches = regex.Matches(str);
 
-            var result = new List<int>();
+            List<int> result = [];
 
             foreach (Match match in matches)
             {
@@ -77,12 +77,20 @@ namespace AdventOfCode.Extensions
 
         public static string[] Split(this string str, string needle)
         {
-            return str.Split(new string[] { needle }, StringSplitOptions.None);
+            return str.Split([needle], StringSplitOptions.None);
+        }
+
+        /// <summary>
+        /// Use an end index instead of a length.
+        /// </summary>
+        public static string SubstringUpTo(this string str, int start, int end)
+        {
+            return str.Substring(start, end - start + 1);
         }
 
         public static string Replace(this string str, string needle, int idx, int length)
         {
-            string newStr = "";
+            string newStr = string.Empty;
 
             for (int i = 0; i < idx; i++)
             {
@@ -101,7 +109,7 @@ namespace AdventOfCode.Extensions
 
         public static string Minus(this string str, string other)
         {
-            string result = "";
+            string result = string.Empty;
 
             for (int i = 0; i < str.Length; i++)
             {
