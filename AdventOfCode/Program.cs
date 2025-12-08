@@ -8,7 +8,7 @@ namespace AdventOfCode
     {
         static void Main()
         {
-            Problem_2025_5 prob = new();
+            Problem_2025_6 prob = new();
 
             #region Config
             /// <summary>

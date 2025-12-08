@@ -8,6 +8,7 @@ namespace AdventOfCode
 {
     /// <summary>
     /// Should be used after 2024.
+    /// Classes inheriting from this must be named: Problem_{Year}_{Number}.
     /// </summary>
     abstract class Problem2
     {
