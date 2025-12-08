@@ -45,7 +45,7 @@ namespace AdventOfCode
                     if (exceptCorners && IsCorner(newGrid, i, j))
                         continue;
 
-                    int neighbours = CountNeighbours(grid, i, j);
+                    int neighbours = Core.Utils.CountNeighbours(grid, i, j, n => n == 1);
 
                     if (grid[i, j] == 1) // Light on
                     {
@@ -59,30 +59,6 @@ namespace AdventOfCode
             }
 
             return newGrid;
-        }
-
-        private int CountNeighbours(int[,] grid, int i, int j)
-        {
-            int result = 0;
-
-            if (i > 0)
-            {
-                if (grid[i - 1, j] == 1) result++; // Top middle
-                if (j > 0 && grid[i - 1, j - 1] == 1) result++; // Top left
-                if (j < grid.GetLength(1) - 1 && grid[i - 1, j + 1] == 1) result++; // Top right
-            }
-
-            if (i < grid.GetLength(0) - 1)
-            {
-                if (grid[i + 1, j] == 1) result++; // Bottom middle
-                if (j > 0 && grid[i + 1, j - 1] == 1) result++; // Bottom left
-                if (j < grid.GetLength(1) - 1 && grid[i + 1, j + 1] == 1) result++; // Bottom right
-            }
-
-            if (j > 0 && grid[i, j - 1] == 1) result++; // Middle left
-            if (j < grid.GetLength(1) - 1 && grid[i, j + 1] == 1) result++; // Middle right
-
-            return result;
         }
 
         private int CountLightsOn(int[,] grid)
