@@ -28,20 +28,14 @@ namespace AdventOfCode
             Stack<(int X, int Y)> beams = [];
             beams.Push((startX, 0));
             int uniqueHits = 0;
-            HashSet<(int X, int Y)> visited = [];
             while (beams.Count > 0)
             {
                 (int beamX, int beamY) = beams.Pop();
-                if (visited.Contains((beamX, beamY))) continue;
-                visited.Add((beamX, beamY));
                 if (!splitters.ContainsKey(beamX)) continue; // no splitter on this column
                 Splitter? splitter = splitters[beamX].FirstOrDefault(splitter => splitter.Y > beamY);
-                if (splitter is null) continue; // no splitter below the beam on this column
-                if (!splitter.Hit)
-                {
-                    splitter.SetHit();
-                    uniqueHits++;
-                }
+                if (splitter is null || splitter.Hit) continue; // no splitter below the beam on this column, or it's already hit
+                splitter.SetHit();
+                uniqueHits++;
                 if (beamX > 0) beams.Push((beamX - 1, splitter.Y));
                 if (beamX < Lines[0].Length - 1) beams.Push((beamX + 1, splitter.Y));
             }
